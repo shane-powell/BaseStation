@@ -201,8 +201,12 @@ CurrentMonitor progMonitor(CURRENT_MONITOR_PIN_PROG,"<p3>");  // create monitor 
 ///////////////////////////////////////////////////////////////////////////////
 
 void loop(){
-  
-  SerialCommand::process();              // check for, and process, and new serial commands
+
+
+  SerialCommand::process(Serial);              // check for, and process, and new serial commands
+  SerialCommand::process(Serial1);              // check for, and process, and new serial commands
+  SerialCommand::process(Serial2);              // check for, and process, and new serial commands
+  SerialCommand::process(Serial3);              // check for, and process, and new serial commands
   
   if(CurrentMonitor::checkTime()){      // if sufficient time has elapsed since last update, check current draw on Main and Program Tracks 
     mainMonitor.check();
@@ -221,6 +225,16 @@ void setup(){
 
   Serial.begin(115200);            // configure serial interface
   Serial.flush();
+
+  // Additional Serial Channels for MEGA
+  Serial1.begin(115200);
+  Serial1.flush();
+
+  Serial2.begin(115200);
+  Serial2.flush();
+
+  Serial3.begin(115200);
+  Serial3.flush();
 
   #ifdef SDCARD_CS
     pinMode(SDCARD_CS,OUTPUT);
@@ -557,7 +571,3 @@ void showConfiguration(){
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-
-
-
-

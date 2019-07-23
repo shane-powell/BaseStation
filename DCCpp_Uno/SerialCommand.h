@@ -20,12 +20,8 @@ struct SerialCommand{
   static volatile RegisterList *mRegs, *pRegs;
   static CurrentMonitor *mMonitor;
   static void init(volatile RegisterList *, volatile RegisterList *, CurrentMonitor *);
-  static void parse(char *);
-  static void process();
+  static void parse(char *, HardwareSerial serialPort);
+  static void process(HardwareSerial serialPort);
 }; // SerialCommand
   
 #endif
-
-
-
-

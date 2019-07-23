@@ -42,17 +42,17 @@ void SerialCommand::init(volatile RegisterList *_mRegs, volatile RegisterList *_
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void SerialCommand::process(){
+void SerialCommand::process(HardwareSerial serialPort){
   char c;
     
-  #if COMM_TYPE == 0
+  #if COMM_TYPE == 0  
 
-    while(INTERFACE.available()>0){    // while there is data on the serial line
-     c=INTERFACE.read();
+    while(serialPort.available()>0){    // while there is data on the serial line
+     c=serialPort.read();
      if(c=='<')                    // start of new command
        sprintf(commandString,"");
      else if(c=='>')               // end of new command
-       parse(commandString);                    
+       parse(commandString, serialPort);                    
      else if(strlen(commandString)<MAX_COMMAND_LENGTH)    // if comandString still has space, append character just read from serial line
        sprintf(commandString,"%s%c",commandString,c);     // otherwise, character is ignored (but continue to look for '<' or '>')
     } // while
@@ -61,17 +61,17 @@ void SerialCommand::process(){
 
     EthernetClient client=INTERFACE.available();
 
-    if(client){
-      while(client.connected() && client.available()){        // while there is data on the network
-      c=client.read();
-      if(c=='<')                    // start of new command
-        sprintf(commandString,"");
-      else if(c=='>')               // end of new command
-        parse(commandString);                    
-      else if(strlen(commandString)<MAX_COMMAND_LENGTH)    // if comandString still has space, append character just read from network
-        sprintf(commandString,"%s%c",commandString,c);     // otherwise, character is ignored (but continue to look for '<' or '>')
-      } // while
-    }
+//    if(client){
+//      while(client.connected() && client.available()){        // while there is data on the network
+//      c=client.read();
+//      if(c=='<')                    // start of new command
+//        sprintf(commandString,"");
+//      else if(c=='>')               // end of new command
+//        parse(commandString);                    
+//      else if(strlen(commandString)<MAX_COMMAND_LENGTH)    // if comandString still has space, append character just read from network
+//        sprintf(commandString,"%s%c",commandString,c);     // otherwise, character is ignored (but continue to look for '<' or '>')
+//      } // while
+//    }
 
   #endif
 
@@ -79,7 +79,7 @@ void SerialCommand::process(){
    
 ///////////////////////////////////////////////////////////////////////////////
 
-void SerialCommand::parse(char *com){
+void SerialCommand::parse(char *com, HardwareSerial serialPort){
   
   switch(com[0]){
 
@@ -567,5 +567,3 @@ void SerialCommand::parse(char *com){
 }; // SerialCommand::parse
 
 ///////////////////////////////////////////////////////////////////////////////
-
-
